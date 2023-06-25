@@ -17,12 +17,8 @@ export const backgroundConfig: RollupOptions = {
     copyPlugin({
       targets: [
         {
-          src: 'assets',
-          dest: 'dist/assets',
-        },
-        {
-          src: 'src/manifest.json',
-          dest: 'dist/manifest.json',
+          src: 'src/static',
+          dest: 'dist',
         },
       ],
     }),
