@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/chrome-manifest",
+  "manifest_version": 3,
+  "name": "Duolingo Memo",
+  "description": "Remember your answers from previous lessons",
+  "version": "0.0.1",
+  "icons": {
+    "16": "assets/logo/16x16.png",
+    "48": "assets/logo/48x48.png",
+    "128": "assets/logo/128x128.png",
+    "256": "assets/logo/256x256.png"
+  },
+  "action": {
+    "default_popup": "popup/index.html",
+    "default_title": "Duolingo Memo",
+    "default_icon": {
+      "16": "assets/logo/16x16.png",
+      "24": "assets/logo/24x24.png",
+      "32": "assets/logo/32x32.png"
+    }
+  }
+}
