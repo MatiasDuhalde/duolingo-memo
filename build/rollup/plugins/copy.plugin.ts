@@ -10,7 +10,7 @@ export interface CopyPluginOptions {
 
 export const copyPlugin = (options: CopyPluginOptions): Plugin => ({
   name: 'copy',
-  buildStart: async () => {
+  buildEnd: async () => {
     options.targets.forEach(async (target) => {
       await fse.copy(target.src, target.dest);
     });
