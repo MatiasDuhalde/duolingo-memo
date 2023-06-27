@@ -17,9 +17,7 @@ const clearLessonState = () => {
 
 const lessonUrlStringMatch = 'duolingo.com/lesson/';
 
-const lessonObserver = new MutationObserver((mutations) => {
-  console.log(mutations);
-  console.log('Lesson observer');
+const lessonObserver = new MutationObserver(() => {
   if (lessonState.currentChallenge !== null && !lessonState.currentChallenge.node.isConnected) {
     console.log('Challenge node disconnected!');
     lessonState.currentChallenge = null;
