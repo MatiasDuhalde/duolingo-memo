@@ -5,7 +5,7 @@ const config: RollupOptions[] = [
   popupConfig,
   optionsConfig,
   backgroundConfig,
-  contentScript('content-script'),
+  contentScript('duolingo-script'),
 ];
 
 export default config;

@@ -25,7 +25,7 @@
   "content_scripts": [
     {
       "matches": ["https://www.duolingo.com/*"],
-      "js": ["content/index.js"]
+      "js": ["duolingo-script/index.js"]
     }
   ]
 }
