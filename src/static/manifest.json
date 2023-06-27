@@ -18,5 +18,14 @@
       "24": "assets/logo/24x24.png",
       "32": "assets/logo/32x32.png"
     }
-  }
+  },
+  "background": {
+    "service_worker": "background/index.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.duolingo.com/*"],
+      "js": ["content/index.js"]
+    }
+  ]
 }

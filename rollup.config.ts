@@ -1,6 +1,11 @@
 import { RollupOptions } from 'rollup';
-import { backgroundConfig, optionsConfig, popupConfig } from './build/rollup';
+import { backgroundConfig, contentScript, optionsConfig, popupConfig } from './build/rollup';
 
-const config: RollupOptions[] = [popupConfig, optionsConfig, backgroundConfig];
+const config: RollupOptions[] = [
+  popupConfig,
+  optionsConfig,
+  backgroundConfig,
+  contentScript('content-script'),
+];
 
 export default config;
