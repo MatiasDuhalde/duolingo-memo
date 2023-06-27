@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 export const Options = () => {
   return <div>Options</div>;
 };
 
-ReactDOM.render(<Options />, document.getElementById('root'));
+createRoot(document.getElementById('root')!).render(<Options />);
