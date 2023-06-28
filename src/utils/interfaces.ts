@@ -1,3 +1,5 @@
+import { ChallengeType } from '@app/utils/constants';
+
 export interface LessonState {
   // Whether the user is on a lesson page
   onLesson: boolean;
@@ -11,7 +13,11 @@ export interface Challenge {
   // The node linked to this challenge
   node: Element;
   // The challenge type
-  type: string;
+  type: ChallengeType;
+  // The challenge header
+  header: string;
+  // The challenge prompt
+  prompt: string[];
 }
 
 export interface Feedback {

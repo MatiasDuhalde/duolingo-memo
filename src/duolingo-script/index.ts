@@ -1,4 +1,4 @@
-import { parseChallengeNode, parseFeedbackNode } from '@app/utils/duolingo';
+import { parseChallengeNode, parseFeedbackNode, searchExistingAnswer } from '@app/utils/duolingo';
 import { LessonState } from '@app/utils/interfaces';
 
 const root = document.getElementById('root');
@@ -17,7 +17,7 @@ const clearLessonState = () => {
 
 const lessonUrlStringMatch = 'duolingo.com/lesson/';
 
-const lessonObserver = new MutationObserver(() => {
+const lessonObserver = new MutationObserver(async () => {
   if (lessonState.currentChallenge !== null && !lessonState.currentChallenge.node.isConnected) {
     console.log('Challenge node disconnected!');
     lessonState.currentChallenge = null;
@@ -35,6 +35,16 @@ const lessonObserver = new MutationObserver(() => {
       const parsedChallenge = parseChallengeNode(node);
       console.log(`Challenge node of type ${parsedChallenge.type} found!`);
       lessonState.currentChallenge = parsedChallenge;
+
+      console.log(
+        `Searching for existing answer for challenge: ${parsedChallenge.prompt.toString()}`,
+      );
+      const answer = await searchExistingAnswer(parsedChallenge);
+      if (answer) {
+        console.log(`Found the answer: ${answer}`);
+      } else {
+        console.log('No answer found!');
+      }
     }
   } else if (lessonState.currentFeedback === null) {
     // Find the feedback node in the mutation
