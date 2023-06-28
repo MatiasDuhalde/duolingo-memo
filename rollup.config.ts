@@ -3,6 +3,7 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
+import { emptyDirSync } from 'fs-extra';
 import path from 'path';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
 import zip from 'rollup-plugin-zip';
@@ -15,6 +16,7 @@ const config = {
     dir: 'dist',
     format: 'esm',
     chunkFileNames: path.join('chunks', '[name]-[hash].js'),
+    sourcemap: !isProduction && 'inline',
   },
   plugins: [
     replace({
@@ -24,7 +26,7 @@ const config = {
       preventAssignment: true,
     }),
     chromeExtension(),
-    simpleReloader(),
+    !isProduction && simpleReloader(),
     nodeResolve(),
     commonjs(),
     typescript({
@@ -36,6 +38,10 @@ const config = {
           comments: false,
         },
       }),
+    {
+      name: 'empty-dir',
+      generateBundle: async () => emptyDirSync('dist'),
+    },
     isProduction && zip({ dir: 'releases' }),
   ],
 };
