@@ -19,7 +19,7 @@
   },
   "permissions": ["storage"],
   "background": {
-    "service_worker": "background/index.ts",
+    "service_worker": "background.ts",
     "type": "module"
   },
   "content_scripts": [
