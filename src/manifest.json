@@ -1,9 +1,7 @@
 {
-  "$schema": "https://json.schemastore.org/chrome-manifest",
   "manifest_version": 3,
   "name": "Duolingo Memo",
   "description": "Remember your answers from previous lessons",
-  "version": "0.0.1",
   "icons": {
     "16": "static/logo/16x16.png",
     "48": "static/logo/48x48.png",
@@ -21,7 +19,8 @@
   },
   "permissions": ["storage"],
   "background": {
-    "service_worker": "background/index.ts"
+    "service_worker": "background/index.ts",
+    "type": "module"
   },
   "content_scripts": [
     {
