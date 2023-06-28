@@ -19,6 +19,7 @@
       "32": "assets/logo/32x32.png"
     }
   },
+  "permissions": ["storage"],
   "background": {
     "service_worker": "background/index.js"
   },
