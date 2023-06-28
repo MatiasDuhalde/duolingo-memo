@@ -5,7 +5,8 @@ import {
   validChallengeTypes,
 } from '@app/utils/constants';
 import { Challenge, Feedback } from '@app/utils/interfaces';
-import * as browser from 'webextension-polyfill';
+import 'webextension-polyfill';
+import browser from 'webextension-polyfill';
 
 const challengeTypeRegex = /^challenge challenge-(\w+)$/;
 const feedbackCorrectnessRegex = /^blame blame-(\w+)$/;
@@ -55,7 +56,6 @@ export const searchExistingAnswer = async (challenge: Challenge): Promise<string
   if (!validChallengeTypes.includes(type)) return null;
 
   const key = await getAnswerKey(challenge);
-  console.log(browser);
   const result = await browser.storage.local.get(key);
 
   return result[key] ?? null;

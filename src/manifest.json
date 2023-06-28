@@ -5,28 +5,29 @@
   "description": "Remember your answers from previous lessons",
   "version": "0.0.1",
   "icons": {
-    "16": "assets/logo/16x16.png",
-    "48": "assets/logo/48x48.png",
-    "128": "assets/logo/128x128.png",
-    "256": "assets/logo/256x256.png"
+    "16": "static/logo/16x16.png",
+    "48": "static/logo/48x48.png",
+    "128": "static/logo/128x128.png",
+    "256": "static/logo/256x256.png"
   },
   "action": {
     "default_popup": "popup/index.html",
     "default_title": "Duolingo Memo",
     "default_icon": {
-      "16": "assets/logo/16x16.png",
-      "24": "assets/logo/24x24.png",
-      "32": "assets/logo/32x32.png"
+      "16": "static/logo/16x16.png",
+      "24": "static/logo/24x24.png",
+      "32": "static/logo/32x32.png"
     }
   },
   "permissions": ["storage"],
   "background": {
-    "service_worker": "background/index.js"
+    "service_worker": "background/index.ts"
   },
   "content_scripts": [
     {
       "matches": ["https://www.duolingo.com/*"],
-      "js": ["duolingo-script/index.js"]
+      "js": ["content/duolingo/index.ts"]
     }
-  ]
+  ],
+  "options_page": "options/index.html"
 }

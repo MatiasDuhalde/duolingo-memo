@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* Language and Environment */
     "target": "ESNext",
-    // "lib": [],                                        /* Specify a set of bundled library declaration files that describe the target runtime environment. */
+    "lib": ["DOM", "ESNext"],
     "jsx": "react",
     // "experimentalDecorators": true,                   /* Enable experimental support for legacy experimental decorators. */
     // "emitDecoratorMetadata": true,                    /* Emit design-type metadata for decorated declarations in source files. */
@@ -18,12 +18,8 @@
     "moduleResolution": "NodeNext",
     // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
     "paths": {
-      "@app/*": [
-        "./src/*"
-      ],
-      "@build/*": [
-        "./build/*"
-      ]
+      "@app/*": ["./src/*"],
+      "@build/*": ["./build/*"]
     },
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
@@ -66,9 +62,5 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": [
-    "./src/**/*",
-    "./build/**/*",
-    "./rollup.config.ts"
-  ],
+  "include": ["./src/**/*", "./rollup.config.ts"]
 }
