@@ -26,3 +26,12 @@ export interface Feedback {
   // Whether the feedback is correct or incorrect
   correct: boolean;
 }
+
+export interface Settings {
+  autoFill: boolean;
+  saveAnswers: boolean;
+}
+
+export type NullableSettings = {
+  [P in keyof Settings]: Settings[P] | null;
+};
