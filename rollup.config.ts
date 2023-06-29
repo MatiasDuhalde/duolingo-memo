@@ -8,7 +8,7 @@ import path from 'path';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
 import zip from 'rollup-plugin-zip';
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env['NODE_ENV'] === 'production';
 
 const config = {
   input: 'src/manifest.json',
@@ -23,15 +23,16 @@ const config = {
       'process.env.NODE_ENV': isProduction
         ? JSON.stringify('production')
         : JSON.stringify('development'),
+      "process.env.['NODE_ENV']": isProduction
+        ? JSON.stringify('production')
+        : JSON.stringify('development'),
       preventAssignment: true,
     }),
     chromeExtension(),
     !isProduction && simpleReloader(),
     nodeResolve(),
     commonjs(),
-    typescript({
-      tsconfig: './tsconfig.json',
-    }),
+    typescript(),
     isProduction &&
       terser({
         format: {
