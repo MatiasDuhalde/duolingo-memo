@@ -1,5 +1,5 @@
-import { parseChallengeNode, parseFeedbackNode, searchExistingAnswer } from '@app/utils/duolingo';
-import { LessonState } from '@app/utils/interfaces';
+import { parseChallengeNode, parseFeedbackNode, searchExistingAnswer } from '../../utils/duolingo';
+import { LessonState } from '../../utils/interfaces';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('root not found');

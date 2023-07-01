@@ -1,4 +1,4 @@
-import { ChallengeType } from '@app/utils/constants';
+import type { ChallengeType } from './constants';
 
 export interface LessonState {
   // Whether the user is on a lesson page

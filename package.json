@@ -1,17 +1,16 @@
 {
   "name": "duolingo-memo",
+  "private": true,
   "version": "0.1.0",
   "description": "A browser extension to remember your answers in Duolingo",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "npm run watch",
-    "watch": "npm run build -- --watch",
-    "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
-    "release": "npm run clean && cross-env NODE_ENV=production npm run build",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
     "clean": "rimraf dist",
-    "lint": "eslint . --ext .ts",
-    "format": "prettier --write .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -20,6 +19,7 @@
   "keywords": [
     "chrome",
     "firefox",
+    "edge",
     "duolingo",
     "extension"
   ],
@@ -29,37 +29,24 @@
     "url": "https://github.com/MatiasDuhalde/duolingo-memo/issues"
   },
   "homepage": "https://github.com/MatiasDuhalde/duolingo-memo#readme",
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.2",
-    "@rollup/plugin-node-resolve": "^15.1.0",
-    "@rollup/plugin-replace": "^5.0.2",
-    "@rollup/plugin-terser": "^0.4.3",
-    "@rollup/plugin-typescript": "^11.1.2",
-    "@types/chrome": "^0.0.239",
-    "@types/firefox-webext-browser": "^111.0.1",
-    "@types/fs-extra": "^11.0.1",
-    "@types/node": "^20.3.2",
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
-    "@types/webextension-polyfill": "^0.10.0",
-    "@typescript-eslint/eslint-plugin": "^5.60.1",
-    "@typescript-eslint/parser": "^5.60.1",
-    "cross-env": "^7.0.3",
-    "eslint": "^8.43.0",
-    "eslint-config-prettier": "^8.8.0",
-    "fs-extra": "^11.1.1",
-    "magic-string": "^0.30.0",
-    "prettier": "^2.8.8",
-    "rimraf": "^5.0.1",
-    "rollup": "^3.25.3",
-    "rollup-plugin-chrome-extension": "^3.6.12",
-    "rollup-plugin-zip": "^1.0.3",
-    "tslib": "^2.6.0",
-    "typescript": "^5.1.5"
-  },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "webextension-polyfill": "^0.10.0"
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.0.0-beta.18",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "@vitejs/plugin-react-swc": "^3.3.2",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.1",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.1.6",
+    "vite": "^4.3.9"
   }
 }
