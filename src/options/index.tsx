@@ -39,6 +39,4 @@ export const Options: React.FC = () => {
   );
 };
 
-console.log('Create root');
-
 createRoot(document.getElementById('root')!).render(<Options />);
