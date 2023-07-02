@@ -15,4 +15,7 @@ export enum ChallengeType {
   UNKNOWN = UNKNOWN_CHALLENGE_TYPE,
 }
 
-export const supportedChallenges: ChallengeType[] = [ChallengeType.TRANSLATE];
+export const supportedChallenges: ChallengeType[] = [
+  ChallengeType.TRANSLATE,
+  ChallengeType.TAP_COMPLETE,
+];

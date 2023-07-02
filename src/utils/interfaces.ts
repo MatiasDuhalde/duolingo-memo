@@ -27,6 +27,15 @@ export interface TranslateChallenge extends Challenge {
   answerArea: HTMLTextAreaElement;
 }
 
+export interface TapCompleteChallenge extends Challenge {
+  type: ChallengeType.TAP_COMPLETE;
+
+  // The word bank containing the tokens
+  wordBank: HTMLDivElement;
+  // The tokens that can be tapped
+  tapTokens: Record<string, HTMLButtonElement>;
+}
+
 export interface Feedback {
   // The node linked to this feedback
   node: Element;

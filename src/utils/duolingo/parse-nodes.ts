@@ -1,6 +1,5 @@
 import { ChallengeType, UNKNOWN_CHALLENGE_HEADER } from '../constants';
-import type { Challenge, Feedback, TranslateChallenge } from '../interfaces';
-import { isChallengeSupported } from './functions';
+import type { Challenge, Feedback, TapCompleteChallenge, TranslateChallenge } from '../interfaces';
 
 const challengeTypeRegex = /^challenge challenge-(\w+)$/;
 const feedbackCorrectnessRegex = /^blame blame-(\w+)$/;
@@ -18,6 +17,25 @@ const parseTranslateChallenge = (node: Element): TranslateChallenge => {
   };
 };
 
+const parseTapCompleteChallenge = (node: Element): TapCompleteChallenge => {
+  const wordBank = node.querySelector('[data-test="word-bank"]') as HTMLDivElement;
+  const tapTokenTextElements = wordBank.querySelectorAll('[data-test="challenge-tap-token-text"]');
+  const tapTokens: Record<string, HTMLButtonElement> = {};
+  for (const tapTokenTextElement of tapTokenTextElements) {
+    const tapToken = tapTokenTextElement.parentNode as HTMLButtonElement;
+    const tapTokenText = tapTokenTextElement.textContent as string;
+    tapTokens[tapTokenText] = tapToken;
+  }
+  return {
+    node,
+    type: ChallengeType.TAP_COMPLETE,
+    header: getChallengeHeader(node),
+    prompt: getChallengePrompt(node),
+    wordBank,
+    tapTokens,
+  };
+};
+
 /**
  * Scraps information about the challenge provided the parent node.
  *
@@ -29,6 +47,8 @@ export const parseChallengeNode = (node: Element): Challenge => {
   const type = (dataTest?.match(challengeTypeRegex)?.[1] ?? ChallengeType.UNKNOWN) as ChallengeType;
   if (type === ChallengeType.TRANSLATE) {
     return parseTranslateChallenge(node);
+  } else if (type === ChallengeType.TAP_COMPLETE) {
+    return parseTapCompleteChallenge(node);
   }
   return {
     node,
@@ -78,31 +98,8 @@ const getChallengePrompt = (node: Element): string[] => {
 
   return uniqueParents.map((parent) =>
     Array.from(parent.children).reduce(
-      (el, child) => (child.tagName === 'SPAN' ? el + child.textContent : el + 'X'),
+      (el, child) => (child.tagName === 'SPAN' ? el + child.textContent : el + '<TAP_TOKEN>'),
       '',
     ),
   );
-};
-
-const getTranslateChallengeInputtedAnswer = (challenge: TranslateChallenge): string => {
-  return challenge.answerArea.value;
-};
-
-/**
- * Retrieves the user-inputted answer to the challenge.
- *
- * @param challenge Challenge to get inputted answer from
- * @returns The inputted answer to the challenge
- */
-export const getChallengeInputtedAnswer = (challenge: Challenge): string | null => {
-  if (!isChallengeSupported(challenge)) {
-    console.log('Unsupported challenge type. Will not parse inputted answer.');
-    return null;
-  }
-
-  if (challenge.type === ChallengeType.TRANSLATE) {
-    return getTranslateChallengeInputtedAnswer(challenge as TranslateChallenge);
-  }
-
-  return null;
 };

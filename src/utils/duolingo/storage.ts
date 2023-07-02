@@ -27,7 +27,10 @@ export const searchExistingAnswer = async (challenge: Challenge): Promise<string
  * @param challenge Searches for an existing answer for the provided challenge
  * @param answer The answer to save
  */
-export const saveAnswer = async (challenge: Challenge, answer: string): Promise<void> => {
+export const saveAnswer = async (
+  challenge: Challenge,
+  answer: string | string[],
+): Promise<void> => {
   if (!isChallengeSupported(challenge)) {
     console.log('Unsupported challenge type. Will not save answer.');
     return;
