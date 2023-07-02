@@ -2,8 +2,16 @@ import { ChallengeType } from '../constants';
 import type { Challenge, TranslateChallenge } from '../interfaces';
 import { isChallengeSupported } from './functions';
 
+const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
+  HTMLTextAreaElement.prototype,
+  'value',
+)!.set!;
+
+const inputEvent = new Event('input', { bubbles: true });
+
 const autoFillTranslateChallenge = (challenge: TranslateChallenge, answer: string): void => {
-  challenge.answerArea.value = answer;
+  nativeTextAreaValueSetter.call(challenge.answerArea, answer);
+  challenge.answerArea.dispatchEvent(inputEvent);
 };
 
 /**
