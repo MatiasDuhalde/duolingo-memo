@@ -20,6 +20,13 @@ export interface Challenge {
   prompt: string[];
 }
 
+export interface TranslateChallenge extends Challenge {
+  type: ChallengeType.TRANSLATE;
+
+  // The challenge prompt
+  answerArea: HTMLTextAreaElement;
+}
+
 export interface Feedback {
   // The node linked to this feedback
   node: Element;

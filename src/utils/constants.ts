@@ -15,6 +15,4 @@ export enum ChallengeType {
   UNKNOWN = UNKNOWN_CHALLENGE_TYPE,
 }
 
-export const validChallengeTypes = Object.values(ChallengeType).filter(
-  (type) => type !== ChallengeType.UNKNOWN && type !== ChallengeType.SPEAK,
-);
+export const supportedChallenges: ChallengeType[] = [ChallengeType.TRANSLATE];

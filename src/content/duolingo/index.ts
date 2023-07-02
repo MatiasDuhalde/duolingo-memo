@@ -1,5 +1,12 @@
-import { parseChallengeNode, parseFeedbackNode, searchExistingAnswer } from '../../utils/duolingo';
-import { LessonState } from '../../utils/interfaces';
+import {
+  getChallengeInputtedAnswer,
+  parseChallengeNode,
+  parseFeedbackNode,
+  saveAnswer,
+  searchExistingAnswer,
+} from '../../utils/duolingo';
+import { autoFillAnswer } from '../../utils/duolingo/auto-fill';
+import type { LessonState } from '../../utils/interfaces';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('root not found');
@@ -17,7 +24,7 @@ const clearLessonState = () => {
 
 const lessonUrlStringMatch = 'duolingo.com/lesson/';
 
-const lessonObserver = new MutationObserver(async () => {
+const lessonObserverCallback = async () => {
   if (lessonState.currentChallenge !== null && !lessonState.currentChallenge.node.isConnected) {
     console.log('Challenge node disconnected!');
     lessonState.currentChallenge = null;
@@ -42,6 +49,7 @@ const lessonObserver = new MutationObserver(async () => {
       const answer = await searchExistingAnswer(parsedChallenge);
       if (answer) {
         console.log(`Found the answer: ${answer}`);
+        autoFillAnswer(parsedChallenge, answer);
       } else {
         console.log('No answer found!');
       }
@@ -54,54 +62,61 @@ const lessonObserver = new MutationObserver(async () => {
       const parsedFeedback = parseFeedbackNode(node);
       if (parsedFeedback.correct) {
         console.log('Correct answer node found!');
+        const inputtedAnswer = getChallengeInputtedAnswer(lessonState.currentChallenge);
+        if (inputtedAnswer) {
+          console.log(`Inputted answer: ${inputtedAnswer}`);
+          console.log('Saving answer...');
+          await saveAnswer(lessonState.currentChallenge, inputtedAnswer);
+          console.log('Answer saved!');
+        }
       } else {
         console.log('Incorrect answer node found!');
       }
       lessonState.currentFeedback = parsedFeedback;
     }
   }
-});
+};
+
+const lessonObserver = new MutationObserver(lessonObserverCallback);
+
+let oldHref = document.location.href;
 
 /**
  * Main functionality should only execute when the user is on a lesson page.
  * This is determined by checking if the URL contains the string 'duolingo.com/lesson/'.
  * This cannot be implemented into the manifest.json since the Duolingo web app
  * is a single page application and the page does not reload when navigating.
- *
  * This function observes the URL and checks if the user is on a lesson page.
+ *
+ * TODO: This may cause performance issues since the observer is always running.
  */
-const observeUrlChange = () => {
-  let oldHref = document.location.href;
-
-  const observer = new MutationObserver(() => {
-    const currentHref = document.location.href;
-    if (oldHref !== currentHref) {
-      oldHref = currentHref;
-
-      if (currentHref.includes(lessonUrlStringMatch) && !lessonState.onLesson) {
-        console.log('Lesson detected!');
-        lessonState.onLesson = true;
-        clearLessonState();
-        lessonObserver.observe(root, { childList: true, subtree: true });
-      } else if (lessonState.onLesson) {
-        console.log('Lesson ended!');
-        lessonState.onLesson = false;
-        clearLessonState();
-        lessonObserver.disconnect();
-      }
-    }
-  });
-  observer.observe(root, { childList: true, subtree: true });
+const toggleObservers = (currentHref: string) => {
+  if (currentHref.includes(lessonUrlStringMatch) && !lessonState.onLesson) {
+    console.log('Lesson detected!');
+    lessonState.onLesson = true;
+    clearLessonState();
+    lessonObserver.observe(root, { childList: true, subtree: true });
+  } else if (lessonState.onLesson) {
+    console.log('Lesson ended!');
+    lessonState.onLesson = false;
+    clearLessonState();
+    lessonObserver.disconnect();
+  }
 };
 
-// Handle the case where the user navigates to a lesson directly
-if (document.location.href.includes(lessonUrlStringMatch)) {
-  console.log('Lesson detected!');
-  lessonState.onLesson = true;
-  clearLessonState();
-  lessonObserver.observe(root, { childList: true, subtree: true });
-}
+const urlObserverCallback = () => {
+  const currentHref = document.location.href;
+  if (oldHref !== currentHref) {
+    oldHref = currentHref;
+    toggleObservers(currentHref);
+  }
+};
 
-window.addEventListener('load', observeUrlChange);
+const urlObserver = new MutationObserver(urlObserverCallback);
+
+urlObserver.observe(root, { childList: true, subtree: true });
+
+// Handle the case where the user navigates to a lesson directly
+toggleObservers(document.location.href);
 
 console.log('Duolingo Memo content script loaded!');

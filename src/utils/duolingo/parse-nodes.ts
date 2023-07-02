@@ -1,13 +1,22 @@
-import {
-  ChallengeType,
-  HASH_ALGORITH,
-  UNKNOWN_CHALLENGE_HEADER,
-  validChallengeTypes,
-} from './constants';
-import type { Challenge, Feedback } from './interfaces';
+import { ChallengeType, UNKNOWN_CHALLENGE_HEADER } from '../constants';
+import type { Challenge, Feedback, TranslateChallenge } from '../interfaces';
+import { isChallengeSupported } from './functions';
 
 const challengeTypeRegex = /^challenge challenge-(\w+)$/;
 const feedbackCorrectnessRegex = /^blame blame-(\w+)$/;
+
+const parseTranslateChallenge = (node: Element): TranslateChallenge => {
+  const answerArea = node.querySelector(
+    '[data-test="challenge-translate-input"]',
+  ) as HTMLTextAreaElement;
+  return {
+    node,
+    type: ChallengeType.TRANSLATE,
+    header: getChallengeHeader(node),
+    prompt: getChallengePrompt(node),
+    answerArea,
+  };
+};
 
 /**
  * Scraps information about the challenge provided the parent node.
@@ -17,13 +26,15 @@ const feedbackCorrectnessRegex = /^blame blame-(\w+)$/;
  */
 export const parseChallengeNode = (node: Element): Challenge => {
   const dataTest = node.attributes.getNamedItem('data-test')?.value;
-  const prompt = getChallengePrompt(node);
-  console.log(prompt);
+  const type = (dataTest?.match(challengeTypeRegex)?.[1] ?? ChallengeType.UNKNOWN) as ChallengeType;
+  if (type === ChallengeType.TRANSLATE) {
+    return parseTranslateChallenge(node);
+  }
   return {
     node,
-    type: (dataTest?.match(challengeTypeRegex)?.[1] ?? ChallengeType.UNKNOWN) as ChallengeType,
+    type,
     header: getChallengeHeader(node),
-    prompt,
+    prompt: getChallengePrompt(node),
   };
 };
 
@@ -48,7 +59,7 @@ export const parseFeedbackNode = (node: Element): Feedback => {
  * @param node The parent node of the challenge
  * @returns The challenge header
  */
-export const getChallengeHeader = (node: Element): string => {
+const getChallengeHeader = (node: Element): string => {
   return (
     node.querySelector('[data-test="challenge-header"]')?.textContent ?? UNKNOWN_CHALLENGE_HEADER
   );
@@ -60,7 +71,7 @@ export const getChallengeHeader = (node: Element): string => {
  * @param node The parent node of the challenge
  * @returns The challenge prompt
  */
-export const getChallengePrompt = (node: Element): string[] => {
+const getChallengePrompt = (node: Element): string[] => {
   const uniqueParents = Array.from(node.querySelectorAll('[data-test="hint-token"]'))
     .map((el) => el.parentElement?.parentElement)
     .filter((el, i, arr) => arr.indexOf(el) === i && el !== null && el !== undefined) as Element[];
@@ -73,40 +84,25 @@ export const getChallengePrompt = (node: Element): string[] => {
   );
 };
 
-/**
- * Searches an answer to a challenge in the extension storage.
- *
- * @param challenge Searches for an existing answer for the provided challenge
- * @returns The answer if found, null otherwise
- */
-export const searchExistingAnswer = async (challenge: Challenge): Promise<string | null> => {
-  const { type } = challenge;
-  if (!validChallengeTypes.includes(type)) return null;
-
-  const key = await getAnswerKey(challenge);
-  // const result = await browser.storage.local.get(key);
-  const result: Record<string, string> = {};
-
-  return result[key] ?? null;
+const getTranslateChallengeInputtedAnswer = (challenge: TranslateChallenge): string => {
+  return challenge.answerArea.value;
 };
 
 /**
- * Forms the key corresponding to the answer of the provided challenge
+ * Retrieves the user-inputted answer to the challenge.
  *
- * @param challenge The challenge object
- * @returns The key used to store the answer
+ * @param challenge Challenge to get inputted answer from
+ * @returns The inputted answer to the challenge
  */
-export const getAnswerKey = async (challenge: Challenge): Promise<string> => {
-  const { type, prompt } = challenge;
-  return Array.prototype.map
-    .call(
-      new Uint8Array(
-        await window.crypto.subtle.digest(
-          HASH_ALGORITH,
-          new TextEncoder().encode(`${type}///${prompt.toString()}`),
-        ),
-      ),
-      (x) => ('00' + x.toString(16)).slice(-2),
-    )
-    .join('');
+export const getChallengeInputtedAnswer = (challenge: Challenge): string | null => {
+  if (!isChallengeSupported(challenge)) {
+    console.log('Unsupported challenge type. Will not parse inputted answer.');
+    return null;
+  }
+
+  if (challenge.type === ChallengeType.TRANSLATE) {
+    return getTranslateChallengeInputtedAnswer(challenge as TranslateChallenge);
+  }
+
+  return null;
 };

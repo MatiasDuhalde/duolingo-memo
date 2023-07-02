@@ -1,13 +1,19 @@
-// import { SETTINGS_STORAGE_KEY } from '@app/utils/constants';
-// import browser from 'webextension-polyfill';
+import { SETTINGS_STORAGE_KEY } from './utils/constants';
 
-// console.log(browser);
-
-// browser.runtime.onInstalled.addListener(() => {
-//   // const key = browser.storage.sync.get(SETTINGS_STORAGE_KEY);
-//   // console.log(key);
-// });
+self.chrome.runtime.onInstalled.addListener(async () => {
+  console.log('Installed!');
+  const { settings } = await self.chrome.storage.sync.get(SETTINGS_STORAGE_KEY);
+  if (settings) {
+    console.log('Found previous settings:', JSON.stringify(settings));
+  } else {
+    console.log('No previous settings found, setting defaults.');
+  }
+  await self.chrome.storage.sync.set({
+    settings: {
+      autoFill: settings?.autoFill ?? true,
+      saveAnswers: settings?.saveAnswers ?? true,
+    },
+  });
+});
 
 console.log('Background script loaded!');
-
-console.log(self);
