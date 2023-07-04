@@ -22,9 +22,16 @@ export interface Challenge {
 
 export interface TranslateChallenge extends Challenge {
   type: ChallengeType.TRANSLATE;
-
   // The challenge prompt
   answerArea: HTMLTextAreaElement;
+}
+
+export interface TranslateTapChallenge extends Challenge {
+  type: ChallengeType.TRANSLATE_TAP;
+  // The word bank containing the tokens
+  wordBank: HTMLDivElement;
+  // The tokens that can be tapped
+  tapTokens: Record<string, HTMLSpanElement>;
 }
 
 export interface TapCompleteChallenge extends Challenge {
@@ -33,7 +40,14 @@ export interface TapCompleteChallenge extends Challenge {
   // The word bank containing the tokens
   wordBank: HTMLDivElement;
   // The tokens that can be tapped
-  tapTokens: Record<string, HTMLButtonElement>;
+  tapTokens: Record<string, HTMLSpanElement>;
+}
+
+export interface AssistChallenge extends Challenge {
+  type: ChallengeType.ASSIST;
+
+  // The list of options that can be selected
+  options: HTMLDivElement[];
 }
 
 export interface Feedback {

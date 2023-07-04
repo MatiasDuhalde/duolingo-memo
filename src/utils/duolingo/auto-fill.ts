@@ -1,5 +1,11 @@
 import { ChallengeType } from '../constants';
-import type { Challenge, TapCompleteChallenge, TranslateChallenge } from '../interfaces';
+import type {
+  AssistChallenge,
+  Challenge,
+  TapCompleteChallenge,
+  TranslateChallenge,
+  TranslateTapChallenge,
+} from '../interfaces';
 import { isChallengeSupported } from './functions';
 
 const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
@@ -14,10 +20,29 @@ const autoFillTranslateChallenge = (challenge: TranslateChallenge, answer: strin
   challenge.answerArea.dispatchEvent(inputEvent);
 };
 
+const autoFillTranslateTapChallenge = (
+  challenge: TranslateTapChallenge,
+  answer: string[],
+): void => {
+  for (const word of answer) {
+    challenge.tapTokens[word].click();
+  }
+};
+
 const autoFillTapCompleteChallenge = (challenge: TapCompleteChallenge, answer: string[]): void => {
   for (const word of answer) {
     challenge.tapTokens[word].click();
   }
+};
+
+const autoFillAssistChallenge = (challenge: AssistChallenge, answer: string): void => {
+  (
+    Array.from(
+      challenge.node.querySelectorAll('[data-test="challenge-judge-text"]'),
+    ) as HTMLDivElement[]
+  )
+    .find((el) => el.textContent === answer)
+    ?.click();
 };
 
 /**
@@ -32,9 +57,14 @@ export const autoFillAnswer = (challenge: Challenge, answer: string | string[]):
     return;
   }
 
-  if (challenge.type === ChallengeType.TRANSLATE) {
+  const { type } = challenge;
+  if (type === ChallengeType.TRANSLATE) {
     autoFillTranslateChallenge(challenge as TranslateChallenge, answer as string);
-  } else if (challenge.type === ChallengeType.TAP_COMPLETE) {
+  } else if (type === ChallengeType.TRANSLATE_TAP) {
+    autoFillTranslateTapChallenge(challenge as TranslateTapChallenge, answer as string[]);
+  } else if (type === ChallengeType.TAP_COMPLETE) {
     autoFillTapCompleteChallenge(challenge as TapCompleteChallenge, answer as string[]);
+  } else if (type === ChallengeType.ASSIST) {
+    autoFillAssistChallenge(challenge as AssistChallenge, answer as string);
   }
 };

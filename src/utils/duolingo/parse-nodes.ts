@@ -1,5 +1,12 @@
 import { ChallengeType, UNKNOWN_CHALLENGE_HEADER } from '../constants';
-import type { Challenge, Feedback, TapCompleteChallenge, TranslateChallenge } from '../interfaces';
+import type {
+  AssistChallenge,
+  Challenge,
+  Feedback,
+  TapCompleteChallenge,
+  TranslateChallenge,
+  TranslateTapChallenge,
+} from '../interfaces';
 
 const challengeTypeRegex = /^challenge challenge-(\w+)$/;
 const feedbackCorrectnessRegex = /^blame blame-(\w+)$/;
@@ -17,15 +24,38 @@ const parseTranslateChallenge = (node: Element): TranslateChallenge => {
   };
 };
 
+const parseTranslateTapChallenge = (node: Element): TranslateTapChallenge => {
+  const wordBank = node.querySelector('[data-test="word-bank"]') as HTMLDivElement;
+  const tapTokenElements = wordBank.querySelectorAll(
+    '[data-test="challenge-tap-token-text"]',
+  ) as NodeListOf<HTMLSpanElement>;
+  const tapTokens: Record<string, HTMLSpanElement> = {};
+  for (const tapTokenElement of tapTokenElements) {
+    const tapTokenText = tapTokenElement.textContent as string;
+    tapTokens[tapTokenText] = tapTokenElement;
+  }
+
+  return {
+    node,
+    type: ChallengeType.TRANSLATE_TAP,
+    header: getChallengeHeader(node),
+    prompt: getChallengePrompt(node),
+    wordBank,
+    tapTokens,
+  };
+};
+
 const parseTapCompleteChallenge = (node: Element): TapCompleteChallenge => {
   const wordBank = node.querySelector('[data-test="word-bank"]') as HTMLDivElement;
-  const tapTokenTextElements = wordBank.querySelectorAll('[data-test="challenge-tap-token-text"]');
-  const tapTokens: Record<string, HTMLButtonElement> = {};
-  for (const tapTokenTextElement of tapTokenTextElements) {
-    const tapToken = tapTokenTextElement.parentNode as HTMLButtonElement;
-    const tapTokenText = tapTokenTextElement.textContent as string;
-    tapTokens[tapTokenText] = tapToken;
+  const tapTokenElements = wordBank.querySelectorAll(
+    '[data-test="challenge-tap-token-text"]',
+  ) as NodeListOf<HTMLSpanElement>;
+  const tapTokens: Record<string, HTMLSpanElement> = {};
+  for (const tapTokenElement of tapTokenElements) {
+    const tapTokenText = tapTokenElement.textContent as string;
+    tapTokens[tapTokenText] = tapTokenElement;
   }
+
   return {
     node,
     type: ChallengeType.TAP_COMPLETE,
@@ -33,6 +63,22 @@ const parseTapCompleteChallenge = (node: Element): TapCompleteChallenge => {
     prompt: getChallengePrompt(node),
     wordBank,
     tapTokens,
+  };
+};
+
+const parseAssistChallenge = (node: Element): AssistChallenge => {
+  const header = getChallengeHeader(node);
+
+  const options = Array.from(
+    node.querySelectorAll('[data-test="challenge-choice"]'),
+  ) as HTMLDivElement[];
+
+  return {
+    node,
+    type: ChallengeType.ASSIST,
+    header,
+    prompt: [header],
+    options,
   };
 };
 
@@ -44,11 +90,24 @@ const parseTapCompleteChallenge = (node: Element): TapCompleteChallenge => {
  */
 export const parseChallengeNode = (node: Element): Challenge => {
   const dataTest = node.attributes.getNamedItem('data-test')?.value;
-  const type = (dataTest?.match(challengeTypeRegex)?.[1] ?? ChallengeType.UNKNOWN) as ChallengeType;
+  let type = (dataTest?.match(challengeTypeRegex)?.[1] ?? ChallengeType.UNKNOWN) as ChallengeType;
+
+  // special case for translate type
+  if (type === ChallengeType.TRANSLATE) {
+    const translateInput = node.querySelector('[data-test="challenge-translate-input"]');
+    if (!translateInput) {
+      type = ChallengeType.TRANSLATE_TAP;
+    }
+  }
+
   if (type === ChallengeType.TRANSLATE) {
     return parseTranslateChallenge(node);
+  } else if (type === ChallengeType.TRANSLATE_TAP) {
+    return parseTranslateTapChallenge(node);
   } else if (type === ChallengeType.TAP_COMPLETE) {
     return parseTapCompleteChallenge(node);
+  } else if (type === ChallengeType.ASSIST) {
+    return parseAssistChallenge(node);
   }
   return {
     node,

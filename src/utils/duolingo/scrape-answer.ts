@@ -1,9 +1,31 @@
 import { ChallengeType } from '../constants';
-import type { Challenge, TapCompleteChallenge, TranslateChallenge } from '../interfaces';
+import type {
+  AssistChallenge,
+  Challenge,
+  TapCompleteChallenge,
+  TranslateChallenge,
+  TranslateTapChallenge,
+} from '../interfaces';
 import { isChallengeSupported } from './functions';
 
 const getTranslateChallengeInputtedAnswer = (challenge: TranslateChallenge): string => {
   return challenge.answerArea.value;
+};
+
+const getTranslateTapChallengeInputtedAnswer = (challenge: TranslateTapChallenge): string[] => {
+  const allTokenNodes = Array.from(
+    challenge.node.querySelectorAll('[data-test="challenge-tap-token-text"]'),
+  ) as HTMLSpanElement[];
+  const tapTokensArray = Object.values(challenge.tapTokens);
+
+  return allTokenNodes
+    .filter((el) => !tapTokensArray.includes(el))
+    .map((el) => el.textContent as string);
+};
+
+const getAssistChallengeInputtedAnswer = (challenge: AssistChallenge): string => {
+  const selectedOption = challenge.options.find((option) => option.ariaChecked === 'true');
+  return selectedOption?.querySelector('[data-test="challenge-judge-text"]')?.textContent as string;
 };
 
 const getTapCompleteChallengeInputtedAnswer = (challenge: TapCompleteChallenge): string[] => {
@@ -21,9 +43,9 @@ const getTapCompleteChallengeInputtedAnswer = (challenge: TapCompleteChallenge):
 
   const inputOrder: string[] = [];
   for (const answerSlot of answerSlots) {
-    const parentSpans: HTMLSpanElement[] = Array.from(
-      answerSlot.querySelectorAll('[data-test$="challenge-tap-token"]'),
-    ).map((el) => el.parentElement as HTMLSpanElement);
+    const parentSpans: HTMLSpanElement[] = Array.from(answerSlot.querySelectorAll('button')).map(
+      (el) => el.parentElement as HTMLSpanElement,
+    );
     // get the span with the least number of classes
     const span = parentSpans.reduce((prev, curr) =>
       prev.classList.length < curr.classList.length ? prev : curr,
@@ -46,10 +68,15 @@ export const getChallengeInputtedAnswer = (challenge: Challenge): string | strin
     return null;
   }
 
-  if (challenge.type === ChallengeType.TRANSLATE) {
+  const { type } = challenge;
+  if (type === ChallengeType.TRANSLATE) {
     return getTranslateChallengeInputtedAnswer(challenge as TranslateChallenge);
-  } else if (challenge.type === ChallengeType.TAP_COMPLETE) {
+  } else if (type === ChallengeType.TRANSLATE_TAP) {
+    return getTranslateTapChallengeInputtedAnswer(challenge as TranslateTapChallenge);
+  } else if (type === ChallengeType.TAP_COMPLETE) {
     return getTapCompleteChallengeInputtedAnswer(challenge as TapCompleteChallenge);
+  } else if (type === ChallengeType.ASSIST) {
+    return getAssistChallengeInputtedAnswer(challenge as AssistChallenge);
   }
 
   return null;
