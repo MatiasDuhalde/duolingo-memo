@@ -21,13 +21,19 @@ const defaultSettings = { autoFill: true, saveAnswers: true };
 export const Options: React.FC = () => {
   const [settings, setSettings] = React.useState<Settings>(defaultSettings);
   const [loading, setLoading] = React.useState(true);
+  const [storageUsed, setStorageUsed] = React.useState(0);
 
   React.useEffect(() => {
     (async () => {
       const { settings } = await chrome.storage.sync.get(SETTINGS_STORAGE_KEY);
       setSettings(settings);
       setLoading(false);
+      setStorageUsed(await chrome.storage.local.getBytesInUse(null));
     })();
+
+    chrome.storage.local.onChanged.addListener(async () => {
+      setStorageUsed(await chrome.storage.local.getBytesInUse(null));
+    });
   }, []);
 
   const handleSaveSettingsClick = React.useCallback(async () => {
@@ -38,6 +44,16 @@ export const Options: React.FC = () => {
 
   const handleResetSettingsClick = React.useCallback(async () => {
     setSettings(defaultSettings);
+  }, []);
+
+  const handleDeleteAllAnswersClick = React.useCallback(async () => {
+    setLoading(true);
+    const confirmed = confirm('Are you sure you want to delete all saved answers?');
+    if (confirmed) {
+      const allKeys = Object.keys(await chrome.storage.local.get(null));
+      await chrome.storage.local.remove(allKeys);
+    }
+    setLoading(false);
   }, []);
 
   const handleAutoFillChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,6 +143,30 @@ export const Options: React.FC = () => {
                   onClick={handleResetSettingsClick}
                 >
                   Reset defaults
+                </LoadingButton>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h5">Data</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body1">
+                  Size of answers in storage:{' '}
+                  {storageUsed >= 1000000
+                    ? `${(storageUsed / 1000000).toFixed(2)} MB`
+                    : storageUsed >= 1000
+                    ? `${(storageUsed / 1000).toFixed(2)} kB`
+                    : `${storageUsed} B`}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <LoadingButton
+                  variant="contained"
+                  color="error"
+                  fullWidth
+                  loading={loading}
+                  onClick={handleDeleteAllAnswersClick}
+                >
+                  Delete all saved answers
                 </LoadingButton>
               </Grid>
             </Grid>
