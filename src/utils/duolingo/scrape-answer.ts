@@ -64,7 +64,7 @@ const getTapCompleteChallengeInputtedAnswer = (challenge: TapCompleteChallenge):
  */
 export const getChallengeInputtedAnswer = (challenge: Challenge): string | string[] | null => {
   if (!isChallengeSupported(challenge)) {
-    console.log('Unsupported challenge type. Will not parse inputted answer.');
+    console.debug('Unsupported challenge type. Will not parse inputted answer.');
     return null;
   }
 

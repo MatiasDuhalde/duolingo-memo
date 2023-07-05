@@ -11,7 +11,7 @@ import { isChallengeSupported } from './functions';
  */
 export const searchExistingAnswer = async (challenge: Challenge): Promise<string | null> => {
   if (!isChallengeSupported(challenge)) {
-    console.log('Unsupported challenge type. Cannot search for existing answer.');
+    console.debug('Unsupported challenge type. Cannot search for existing answer.');
     return null;
   }
 
@@ -32,7 +32,7 @@ export const saveAnswer = async (
   answer: string | string[],
 ): Promise<void> => {
   if (!isChallengeSupported(challenge)) {
-    console.log('Unsupported challenge type. Will not save answer.');
+    console.debug('Unsupported challenge type. Will not save answer.');
     return;
   }
 

@@ -35,55 +35,55 @@ self.chrome.storage.sync.onChanged.addListener((changes) => {
 
 const lessonObserverCallback = async () => {
   if (lessonState.currentChallenge !== null && !lessonState.currentChallenge.node.isConnected) {
-    console.log('Challenge node disconnected!');
+    console.debug('Challenge node disconnected!');
     lessonState.currentChallenge = null;
   }
   if (lessonState.currentFeedback !== null && !lessonState.currentFeedback.node.isConnected) {
-    console.log('Feedback node disconnected!');
+    console.debug('Feedback node disconnected!');
     lessonState.currentFeedback = null;
   }
 
   if (lessonState.currentChallenge === null) {
     // Find the challenge node
-    console.log('Searching possible challenge node...');
+    console.debug('Searching possible challenge node...');
     const node = document.querySelector('[data-test^="challenge challenge"]');
     if (node) {
       const parsedChallenge = parseChallengeNode(node);
-      console.log(`Challenge node of type ${parsedChallenge.type} found!`);
+      console.debug(`Challenge node of type ${parsedChallenge.type} found!`);
       lessonState.currentChallenge = parsedChallenge;
 
       if (settings.autoFill) {
-        console.log(
+        console.debug(
           `Searching for existing answer for challenge: ${parsedChallenge.prompt.toString()}`,
         );
         const answer = await searchExistingAnswer(parsedChallenge);
         if (answer) {
-          console.log(`Found the answer: ${answer}`);
+          console.debug(`Found the answer: ${answer}`);
           autoFillAnswer(parsedChallenge, answer);
         } else {
-          console.log('No answer found!');
+          console.debug('No answer found!');
         }
       }
     }
   } else if (lessonState.currentFeedback === null) {
     // Find the feedback node in the mutation
-    console.log('Searching possible feedback node...');
+    console.debug('Searching possible feedback node...');
     const node = document.querySelector('[data-test^="blame blame"]');
     if (node) {
       const parsedFeedback = parseFeedbackNode(node);
       if (parsedFeedback.correct) {
-        console.log('Correct answer node found!');
+        console.debug('Correct answer node found!');
         if (settings.autoSave) {
           const inputtedAnswer = getChallengeInputtedAnswer(lessonState.currentChallenge);
           if (inputtedAnswer) {
-            console.log(`Inputted answer: ${inputtedAnswer}`);
-            console.log('Saving answer...');
+            console.debug(`Inputted answer: ${inputtedAnswer}`);
+            console.debug('Saving answer...');
             await saveAnswer(lessonState.currentChallenge, inputtedAnswer);
-            console.log('Answer saved!');
+            console.debug('Answer saved!');
           }
         }
       } else {
-        console.log('Incorrect answer node found!');
+        console.debug('Incorrect answer node found!');
       }
       lessonState.currentFeedback = parsedFeedback;
     }
@@ -105,12 +105,12 @@ let oldHref = document.location.href;
  */
 const toggleObservers = (currentHref: string) => {
   if (currentHref.includes(lessonUrlStringMatch) && !lessonState.onLesson) {
-    console.log('Lesson detected!');
+    console.debug('Lesson detected!');
     lessonState.onLesson = true;
     clearLessonState();
     lessonObserver.observe(root, { childList: true, subtree: true });
   } else if (lessonState.onLesson) {
-    console.log('Lesson ended!');
+    console.debug('Lesson ended!');
     lessonState.onLesson = false;
     clearLessonState();
     lessonObserver.disconnect();
@@ -132,4 +132,4 @@ urlObserver.observe(root, { childList: true, subtree: true });
 // Handle the case where the user navigates to a lesson directly
 toggleObservers(document.location.href);
 
-console.log('Duolingo Memo content script loaded!');
+console.debug('Duolingo Memo content script loaded!');

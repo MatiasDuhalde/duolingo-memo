@@ -53,7 +53,7 @@ const autoFillAssistChallenge = (challenge: AssistChallenge, answer: string): vo
  */
 export const autoFillAnswer = (challenge: Challenge, answer: string | string[]): void => {
   if (!isChallengeSupported(challenge)) {
-    console.log('Unsupported challenge type. Will not auto-fill answer.');
+    console.debug('Unsupported challenge type. Will not auto-fill answer.');
     return;
   }
 

@@ -1,12 +1,12 @@
 import { SETTINGS_STORAGE_KEY } from './utils/constants';
 
 self.chrome.runtime.onInstalled.addListener(async () => {
-  console.log('Installed!');
+  console.debug('Installed!');
   const { settings } = await self.chrome.storage.sync.get(SETTINGS_STORAGE_KEY);
   if (settings) {
-    console.log('Found previous settings:', JSON.stringify(settings));
+    console.debug('Found previous settings:', JSON.stringify(settings));
   } else {
-    console.log('No previous settings found, setting defaults.');
+    console.debug('No previous settings found, setting defaults.');
   }
   await self.chrome.storage.sync.set({
     settings: {
@@ -16,4 +16,4 @@ self.chrome.runtime.onInstalled.addListener(async () => {
   });
 });
 
-console.log('Background script loaded!');
+console.debug('Background script loaded!');
