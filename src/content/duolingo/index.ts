@@ -1,3 +1,4 @@
+import { SETTINGS_STORAGE_KEY } from '../../utils/constants';
 import {
   getChallengeInputtedAnswer,
   parseChallengeNode,
@@ -24,6 +25,14 @@ const clearLessonState = () => {
 
 const lessonUrlStringMatch = 'duolingo.com/lesson/';
 
+let settings = await self.chrome.storage.sync.get(SETTINGS_STORAGE_KEY);
+
+self.chrome.storage.sync.onChanged.addListener((changes) => {
+  if (changes[SETTINGS_STORAGE_KEY]) {
+    settings = changes[SETTINGS_STORAGE_KEY].newValue;
+  }
+});
+
 const lessonObserverCallback = async () => {
   if (lessonState.currentChallenge !== null && !lessonState.currentChallenge.node.isConnected) {
     console.log('Challenge node disconnected!');
@@ -43,15 +52,17 @@ const lessonObserverCallback = async () => {
       console.log(`Challenge node of type ${parsedChallenge.type} found!`);
       lessonState.currentChallenge = parsedChallenge;
 
-      console.log(
-        `Searching for existing answer for challenge: ${parsedChallenge.prompt.toString()}`,
-      );
-      const answer = await searchExistingAnswer(parsedChallenge);
-      if (answer) {
-        console.log(`Found the answer: ${answer}`);
-        autoFillAnswer(parsedChallenge, answer);
-      } else {
-        console.log('No answer found!');
+      if (settings.autoFill) {
+        console.log(
+          `Searching for existing answer for challenge: ${parsedChallenge.prompt.toString()}`,
+        );
+        const answer = await searchExistingAnswer(parsedChallenge);
+        if (answer) {
+          console.log(`Found the answer: ${answer}`);
+          autoFillAnswer(parsedChallenge, answer);
+        } else {
+          console.log('No answer found!');
+        }
       }
     }
   } else if (lessonState.currentFeedback === null) {
@@ -62,12 +73,14 @@ const lessonObserverCallback = async () => {
       const parsedFeedback = parseFeedbackNode(node);
       if (parsedFeedback.correct) {
         console.log('Correct answer node found!');
-        const inputtedAnswer = getChallengeInputtedAnswer(lessonState.currentChallenge);
-        if (inputtedAnswer) {
-          console.log(`Inputted answer: ${inputtedAnswer}`);
-          console.log('Saving answer...');
-          await saveAnswer(lessonState.currentChallenge, inputtedAnswer);
-          console.log('Answer saved!');
+        if (settings.autoSave) {
+          const inputtedAnswer = getChallengeInputtedAnswer(lessonState.currentChallenge);
+          if (inputtedAnswer) {
+            console.log(`Inputted answer: ${inputtedAnswer}`);
+            console.log('Saving answer...');
+            await saveAnswer(lessonState.currentChallenge, inputtedAnswer);
+            console.log('Answer saved!');
+          }
         }
       } else {
         console.log('Incorrect answer node found!');
