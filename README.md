@@ -18,7 +18,7 @@ This extension includes automatic scripts that interact in the background with D
 
 ## Installation
 
-- TODO: Add badges
+- TODO: Add store badges
 
 ## Bugs
 
@@ -32,13 +32,14 @@ This extension is still in development. If you find a bug, please [open an issue
 ## Features
 
 - [x] Remember your answers on Duolingo
-- [ ] Automatically fill the answer input with the remembered answer
-- [ ] Toggle remembering answers and autocomplete on/off
+- [x] Automatically fill the answer input with the remembered answer
+- [x] Toggle remembering answers and autocomplete on/off
+- [ ] Dark Mode
 - [ ] Per-language settings
-- [ ] Per-exercise settings
 - [ ] Per-challenge settings
+- [ ] Legendary-only mode
 
-Would you like to see a feature added? [Open an issue](https://github.com/MatiasDuhalde/duolingo-memo/issues) and let me know!
+Have any suggestions? Would you like to see another feature added? [Open an issue](https://github.com/MatiasDuhalde/duolingo-memo/issues) and let me know!
 
 ## Exercises
 

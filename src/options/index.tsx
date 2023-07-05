@@ -1,4 +1,5 @@
 import { LoadingButton } from '@mui/lab';
+import { Link } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
@@ -88,14 +89,14 @@ export const Options: React.FC = () => {
               </Grid>
             </Grid>
             <Divider />
-            <Grid container my={2} spacing={2}>
+            <Grid container my={2} spacing={1}>
               <Grid item xs={12}>
-                <Typography variant="h3">Settings Menu</Typography>
+                <Typography variant="h4">Settings Menu</Typography>
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="h5">General</Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <FormGroup>
                   <FormControlLabel
                     control={
@@ -109,7 +110,7 @@ export const Options: React.FC = () => {
                   />
                 </FormGroup>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <FormGroup>
                   <FormControlLabel
                     control={
@@ -170,6 +171,46 @@ export const Options: React.FC = () => {
                 </LoadingButton>
               </Grid>
             </Grid>
+            <Divider />
+            <Grid container my={2} spacing={1}>
+              <Grid item xs={12}>
+                <Typography variant="h4" gutterBottom>
+                  About
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" textAlign="center">
+                  <Link
+                    href="https://github.com/MatiasDuhalde/duolingo-memo"
+                    target="_blank"
+                    underline="none"
+                  >
+                    Github
+                  </Link>
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" textAlign="center">
+                  <Link
+                    href="https://github.com/MatiasDuhalde/duolingo-memo/blob/master/LICENSE"
+                    target="_blank"
+                    underline="none"
+                  >
+                    License
+                  </Link>
+                </Typography>
+              </Grid>
+            </Grid>
+            <Divider />
+            <Box my={2}>
+              <Typography variant="body1" textAlign="center" fontSize={12}>
+                🄯 Copyleft 2023 /{' '}
+                <Link href="https://duhal.de/" target="_blank" underline="none">
+                  Matías Duhalde
+                </Link>
+                . Very few rights reserved. Made with ❤️ in Chile.
+              </Typography>
+            </Box>
           </Box>
         </Container>
       </Box>
