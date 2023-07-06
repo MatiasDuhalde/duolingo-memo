@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Duolingo Memo",
   "version": "0.0.1",
-  "description": "Remember and auto-fills your answers on Duolingo",
+  "description": "Remembers and auto-fills your answers on Duolingo.",
   "icons": {
     "16": "src/static/logo/16x16.png",
     "48": "src/static/logo/48x48.png",
