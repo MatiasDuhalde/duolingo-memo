@@ -7,7 +7,7 @@ import {
   searchExistingAnswer,
 } from '../../utils/duolingo';
 import { autoFillAnswer } from '../../utils/duolingo/auto-fill';
-import type { LessonState } from '../../utils/interfaces';
+import type { LessonState, Settings } from '../../utils/interfaces';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('root not found');
@@ -25,7 +25,9 @@ const clearLessonState = () => {
 
 const lessonUrlStringMatch = 'duolingo.com/lesson/';
 
-let { settings } = await self.chrome.storage.sync.get(SETTINGS_STORAGE_KEY);
+let { settings } = (await self.chrome.storage.sync.get(SETTINGS_STORAGE_KEY)) as {
+  settings: Settings;
+};
 
 self.chrome.storage.sync.onChanged.addListener((changes) => {
   if (changes[SETTINGS_STORAGE_KEY]) {
@@ -73,7 +75,7 @@ const lessonObserverCallback = async () => {
       const parsedFeedback = parseFeedbackNode(node);
       if (parsedFeedback.correct) {
         console.debug('Correct answer node found!');
-        if (settings.autoSave) {
+        if (settings.saveAnswers) {
           const inputtedAnswer = getChallengeInputtedAnswer(lessonState.currentChallenge);
           if (inputtedAnswer) {
             console.debug(`Inputted answer: ${inputtedAnswer}`);
