@@ -34,6 +34,7 @@ This extension is still in development. If you find a bug, please [open an issue
 - [x] Remember your answers on Duolingo
 - [x] Automatically fill the answer input with the remembered answer
 - [x] Toggle remembering answers and autocomplete on/off
+- [ ] See and manage your last answers from popup
 - [ ] Dark Mode
 - [ ] Per-language settings
 - [ ] Per-challenge settings
