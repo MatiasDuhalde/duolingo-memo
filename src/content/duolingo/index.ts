@@ -25,9 +25,11 @@ const clearLessonState = () => {
 
 const lessonUrlStringMatch = 'duolingo.com/lesson/';
 
-let { settings } = (await self.chrome.storage.sync.get(SETTINGS_STORAGE_KEY)) as {
-  settings: Settings;
-};
+let settings: Settings;
+
+(async () => {
+  settings = (await self.chrome.storage.sync.get(SETTINGS_STORAGE_KEY)).settings;
+})();
 
 self.chrome.storage.sync.onChanged.addListener((changes) => {
   if (changes[SETTINGS_STORAGE_KEY]) {
