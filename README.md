@@ -29,6 +29,8 @@ This extension is still in development. If you find a bug, please [open an issue
 - Steps to reproduce the bug
 - Screenshots if possible
 
+Don't have a GitHub account? You can also [send me an email](mailto:contact@duhal.de), although I highly recommend using GitHub, so other people can confirm the problem and make it easier to find a solution.
+
 ## Features
 
 - [x] Remember your answers on Duolingo
@@ -40,7 +42,7 @@ This extension is still in development. If you find a bug, please [open an issue
 - [ ] Per-challenge settings
 - [ ] Legendary-only mode
 
-Have any suggestions? Would you like to see another feature added? [Open an issue](https://github.com/MatiasDuhalde/duolingo-memo/issues) and let me know!
+Have any suggestions? Would you like to see another feature added? [Open an issue](https://github.com/MatiasDuhalde/duolingo-memo/issues) and let me know! You can also [send me an email](mailto:contact@duhal.de), although I highly recommend using GitHub, that way more people can support your suggestion and it's easier to keep track of it.
 
 ## Exercises
 
