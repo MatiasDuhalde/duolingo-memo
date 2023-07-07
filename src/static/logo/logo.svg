@@ -33,23 +33,6 @@
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="g57" />
-  <mask
-     id="mask0"
-     mask-type="alpha"
-     maskUnits="userSpaceOnUse"
-     x="0"
-     y="0"
-     width="326"
-     height="326">
-    <rect
-       width="326"
-       height="326"
-       rx="6"
-       fill="#89e219"
-       id="rect2"
-       x="0"
-       y="0" />
-  </mask>
   <g
      mask="url(#mask0)"
      id="g57"
