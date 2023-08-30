@@ -18,7 +18,9 @@ This extension includes automatic scripts that interact in the background with D
 
 ## Installation
 
-- TODO: Add store badges
+Extension available from:
+
+- [**Chrome** Web Store](https://chrome.google.com/webstore/detail/duolingo-memo/oibokknlhjginjokcocnilfibocideol)
 
 ## Bugs
 
