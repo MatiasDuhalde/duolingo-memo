@@ -60,13 +60,18 @@ Have any suggestions? Would you like to see another feature added? [Open an issu
 - [ ] **Dialogue**: You'll be presented with a conversation between two people. You must choose the correct answer from a list of options. Similar to the "Assist" exercise, but with a slightly different UI.
 - [ ] **Complete Reverse Translation**: Similar to the "Translate" exercise, but you'll be presented with the translation of a sentence in your target language, and you must translate it back to your native language.
 - [ ] **Complete Reverse Translation Tap**: Same as before, but with a word bank. Some exercises may allow switching between this type and the previous one.
+- [ ] **Gap Fill**: Choose the correct option to fill the gaps in the proposed sentence.
+- [ ] **Read Comprehension**: Read a fragment of text, and answer the proposed question.
+- [ ] **Definition**: Read a fragment of text, and select the correct definition of the proposed word or expression from a list of options.
 
 **Note**: This list is not exhaustive. It was made based on the exercises I commonly encounter in the intermediate-advanced levels of the languages I'm learning. If you find an exercise that's not supported, please check the not planned exercises and the notes at the bottom of this section and [open an issue](https://github.com/MatiasDuhalde/duolingo-memo/issues) if it's still pending so I can take a look at it.
 
 ### Not supported (nor planned)
 
 - [ ] **Speak**: Say the sentence out loud. Duolingo will check if you pronounced it correctly.
-- [ ] **Listen Complete**: Listen to the sentence and type it in the input.
+- [ ] **Listen Speak**: Listen to the sentence and repeat it out loud.
+- [ ] **Listen Complete**: Listen to the sentence and complete the input.
+- [ ] **Listen Isolation**: Listen to the sentence and select the correct option from a list of audio clips.
 
 ### Notes on supported exercises
 
